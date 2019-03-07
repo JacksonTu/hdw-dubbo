@@ -74,13 +74,7 @@ public class EnterpriseDepartmentController extends BaseController {
         try {
             //获取企业ID前缀，生成UUID
             ShiroUser shiroUser = ShiroKit.getUser();
-            String prefix = "HDWX";
-            if (shiroUser.getUserType() == 1) {
-                prefix = enterpriseService.getById(ShiroKit.getUser().getEnterpriseId()).getPrefix();
-            } else if (shiroUser.getUserType() == 2) {
-                prefix = enterpriseService.getById(ShiroKit.getEnterpriseIdByUser().get(0)).getPrefix();
-            }
-            enterpriseDepartment.setId(UUIDGenerator.getEnterpriseId(prefix));
+            enterpriseDepartment.setId(UUIDGenerator.getUUID());
             enterpriseDepartment.setCreateTime(new Date());
             enterpriseDepartment.setCreateUser(ShiroKit.getUser().getLoginName());
             enterpriseDepartmentService.save(enterpriseDepartment);
@@ -117,13 +111,13 @@ public class EnterpriseDepartmentController extends BaseController {
     @ApiOperation(value = "删除企业部门表", notes = "删除企业部门表")
     @PostMapping("/delete")
     @RequiresPermissions("enterprise/enterpriseDepartment/delete")
-    public ResultMap deleteBatchIds(@RequestParam Long[] ids) {
+    public ResultMap deleteBatchIds(@RequestBody String[] ids) {
         try {
-            List<Long> idList = new ArrayList<Long>();
+            List<String> idList = new ArrayList<>();
             Collections.addAll(idList, ids);
             if (idList != null && !idList.isEmpty()) {
                 enterpriseDepartmentService.removeByIds(Arrays.asList(ids));
-                for (Long id : idList) {
+                for (String id : idList) {
                     QueryWrapper<EnterpriseDepartment> wrapper = new QueryWrapper<>();
                     wrapper.eq("parent_id", id);
                     enterpriseDepartmentService.remove(wrapper);

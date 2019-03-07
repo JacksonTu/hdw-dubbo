@@ -27,7 +27,7 @@ import java.util.Map;
  * @date 2018年5月14日下午7:57:14
  */
 @Configuration
-@ConditionalOnProperty(value ={"upms.jwt.status"}, matchIfMissing = false)
+@ConditionalOnProperty(value = "upms.security.type", havingValue = "jwt", matchIfMissing = false)
 public class ShiroJwtConfig {
 
     @Autowired
@@ -170,7 +170,7 @@ public class ShiroJwtConfig {
         //设置cookie
         sessionManager.setSessionIdCookieEnabled(true);
         sessionManager.getSessionIdCookie().setName("session-z-id");
-        sessionManager.getSessionIdCookie().setPath("/RiskCollect");
+        sessionManager.getSessionIdCookie().setPath("/hdw-dubbo");
         sessionManager.getSessionIdCookie().setMaxAge(60 * 60 * 1 * 1);
         sessionManager.getSessionIdCookie().setHttpOnly(true);
         return sessionManager;

@@ -21,7 +21,7 @@ public class UUIDGenerator {
     }
 
     /**
-     * 获取20位订单ID或者table ID
+     * 获取19位订单ID或者table ID
      * @return
      */
     public static String getOrderNo() {
@@ -31,20 +31,5 @@ public class UUIDGenerator {
         numStr = trandStr.toString().substring(0, 5);
         numStr = numStr + dataStr;
         return numStr;
-    }
-
-    /**
-     * 生成企业Id
-     *
-     * @param prefix
-     * @return
-     */
-    public static String getEnterpriseId(String prefix) {
-        String numStr = "";
-        String trandStr = String.valueOf((Math.random() * 9 + 1) * 1000000);
-        String dataStr = new SimpleDateFormat("MMddHHMMSS").format(new Date());
-        numStr = trandStr.toString().substring(0, 5);
-        numStr = numStr + dataStr;
-        return prefix + numStr;
     }
 }

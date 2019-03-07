@@ -166,6 +166,7 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.xml</include>
+                    <include>**/*.yml</include>
                     <include>**/*.json</include>
                     <include>static/**</include>
                     <include>static/fonts/**</include>

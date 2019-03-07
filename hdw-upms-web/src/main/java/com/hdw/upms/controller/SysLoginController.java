@@ -62,7 +62,7 @@ public class SysLoginController extends BaseController {
     private IRedisService redisService;
 
     //30分钟过期
-    @Value("${redis.expire}")
+    @Value("${hdw.expire}")
     private int EXPIRE;
 
     @GetMapping("captcha.jpg")

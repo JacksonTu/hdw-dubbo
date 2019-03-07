@@ -19,7 +19,7 @@ public class RedisServiceImpl implements IRedisService {
     @Resource(name = "redisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
 
-    @Value("${redis.expire}")
+    @Value("${hdw.expire}")
     private Integer EXPIRE;
 
     @Override

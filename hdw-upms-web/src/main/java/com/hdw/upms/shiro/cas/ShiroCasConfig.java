@@ -44,30 +44,27 @@ import java.util.Map;
 
 /**
  * @author TuMinglong
- * @description Shiro CAS 配置
+ * @description Shiro CAS配置
  * @date 2018年3月5日 上午11:22:21
  */
 @Configuration
-@ConditionalOnProperty(value ={"upms.cas.status"}, matchIfMissing = false)
+@ConditionalOnProperty(value = "upms.security.type", havingValue = "cas", matchIfMissing = false)
 public class ShiroCasConfig {
 
-    @Value("${sso.cas.server.loginUrl}")
-    private String loginUrl;
-
-    @Value("${sso.cas.server.prefixUrl}")
+    @Value("#{ @environment['cas.prefixUrl'] ?: null }")
     private String prefixUrl;
 
-    @Value("${sso.cas.client.callbackUrl}")
+    @Value("#{ @environment['cas.loginUrl'] ?: null }")
+    private String casLoginUrl;
+
+    @Value("#{ @environment['cas.callbackUrl'] ?: null }")
     private String callbackUrl;
 
-    @Value("${sso.cas.serviceUrl}")
+    @Value("#{ @environment['cas.serviceUrl'] ?: null }")
     private String serviceUrl;
 
     @Value("${jwt.salt}")
     private String salt;
-
-    @Autowired
-    private JwtAuthenticator jwtAuthenticator;
 
     @Autowired
     private RedisSessionDAO sessionDAO;
@@ -77,177 +74,28 @@ public class ShiroCasConfig {
         return new RedisCacheManager();
     }
 
-    @Bean
-    public SecurityManager securityManager() {
-        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        // 设置自定义Realm
-        securityManager.setRealm(pac4jDbRealm());
-        securityManager.setSubjectFactory(pac4jSubjectFactory());
-        // 注入缓存管理器
-        securityManager.setCacheManager(redisCacheManager());
-        // 记住密码管理
-        securityManager.setRememberMeManager(rememberMeManager());
-        // session管理
-        securityManager.setSessionManager(sessionManager());
-
-        return securityManager;
-    }
-
     /**
-     * 身份认证realm(账号密码校验；权限等)
+     * JWT Token 生成器，对CommonProfile生成然后每次携带token访问
+     *
+     * @return
      */
+    @SuppressWarnings("rawtypes")
     @Bean
-    public Realm pac4jDbRealm() {
-        ShiroCasRealm pac4jDbRealm = new ShiroCasRealm();
-        return pac4jDbRealm;
-    }
-
-    @Bean
-    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
-        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-        shiroFilterFactoryBean.setSecurityManager(securityManager);
-        shiroFilterFactoryBean.setFilters(filters());
-        // 拦截器
-        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-
-        /**
-         * 过滤链定义，从上向下顺序执行，一般将 /**放在最为下边 。 anon 不需要认证 authc 需要认证 user
-         * 验证通过或RememberMe登录的都可以
-         */
-        // 开放的静态资源
-        filterChainDefinitionMap.put("/favicon.ico", "anon");// 网站图标
-        filterChainDefinitionMap.put("/static/**", "anon");// 配置static文件下资源能被访问
-        filterChainDefinitionMap.put("/css/**", "anon");
-        filterChainDefinitionMap.put("/font/**", "anon");
-        filterChainDefinitionMap.put("/img/**", "anon");
-        filterChainDefinitionMap.put("/js/**", "anon");
-        filterChainDefinitionMap.put("/plugins/**", "anon");
-        filterChainDefinitionMap.put("/kaptcha.jpg", "anon");// 图片验证码(kaptcha框架)
-        filterChainDefinitionMap.put("/xlsFile/**", "anon");
-        filterChainDefinitionMap.put("/upload/**", "anon");
-        filterChainDefinitionMap.put("/api/**", "anon");// API接口
-
-        // swagger接口文档
-        filterChainDefinitionMap.put("/v2/api-docs", "anon");
-        filterChainDefinitionMap.put("/webjars/**", "anon");
-        filterChainDefinitionMap.put("/swagger-resources/**", "anon");
-        filterChainDefinitionMap.put("/swagger-ui.html", "anon");
-
-        // 其他的
-        filterChainDefinitionMap.put("/druid/**", "anon");
-        filterChainDefinitionMap.put("/actuator/**", "anon");
-        filterChainDefinitionMap.put("/ws/**", "anon");
-        filterChainDefinitionMap.put("/qr/**", "anon");
-        filterChainDefinitionMap.put("/test/**", "anon");
-        filterChainDefinitionMap.put("/notice/sysNews/getNewsInfo", "anon");
-        filterChainDefinitionMap.put("/notice/sysNotice/getNoticeInfo", "anon");
-        filterChainDefinitionMap.put("/notice/sysIsuse/saveMsg", "anon");
-
-        filterChainDefinitionMap.put("/callback", "callbackFilter");
-        filterChainDefinitionMap.put("/logout", "logoutFilter");
-        filterChainDefinitionMap.put("/**", "casSecurityFilter");
-
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
-
-        return shiroFilterFactoryBean;
+    protected JwtGenerator jwtGenerator() {
+        return new JwtGenerator(new SecretSignatureConfiguration(salt), new SecretEncryptionConfiguration(salt));
     }
 
     /**
-     * 对shiro的过滤策略进行明确
+     * JWT校验器，也就是目前设置的ParameterClient进行的校验器，是rest/或者前后端分离的核心校验器
      *
      * @return
      */
     @Bean
-    protected Map<String, Filter> filters() {
-        // 过滤器设置
-        Map<String, Filter> filters = new HashMap<>();
-        filters.put("casSecurityFilter", casSecurityFilter());
-        CallbackFilter callbackFilter = new CallbackFilter();
-        callbackFilter.setConfig(casConfig());
-        filters.put("callbackFilter", callbackFilter);
-
-        LogoutFilter logoutFilter = new LogoutFilter();
-        logoutFilter.setConfig(casConfig());
-        logoutFilter.setCentralLogout(true);
-        logoutFilter.setDefaultUrl(serviceUrl);
-        filters.put("logoutFilter", logoutFilter);
-        return filters;
-    }
-
-    /**
-     * cookie对象;
-     *
-     * @return
-     */
-    @Bean
-    public SimpleCookie rememberMeCookie() {
-        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
-        // 记住我cookie生效时间1小时 ,单位秒
-        simpleCookie.setMaxAge(60 * 60 * 1 * 1);
-        simpleCookie.setPath("/RiskCollect");
-        simpleCookie.setHttpOnly(true);
-        return simpleCookie;
-    }
-
-    /**
-     * cookie管理对象;
-     *
-     * @return
-     */
-    @Bean
-    public CookieRememberMeManager rememberMeManager() {
-        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
-        cookieRememberMeManager.setCookie(rememberMeCookie());
-        cookieRememberMeManager.setCipherKey(Base64.decode("5aaC5qKm5oqA5pyvAAAAAA=="));
-        return cookieRememberMeManager;
-    }
-
-    @Bean(name = "sessionManager")
-    public SessionManager sessionManager() {
-        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-        sessionManager.setGlobalSessionTimeout(60 * 60 * 1 * 1 * 1000);
-        sessionManager.setSessionDAO(sessionDAO);
-        // url中是否显示session Id
-        sessionManager.setSessionIdUrlRewritingEnabled(false);
-        // 删除失效的session
-        sessionManager.setDeleteInvalidSessions(true);
-
-        //会话验证
-        sessionManager.setSessionValidationScheduler(getExecutorServiceSessionValidationScheduler());
-        sessionManager.setSessionValidationSchedulerEnabled(true);
-
-        //设置cookie
-        sessionManager.setSessionIdCookieEnabled(true);
-        sessionManager.getSessionIdCookie().setName("session-z-id");
-        sessionManager.getSessionIdCookie().setPath("/RiskCollect");
-        sessionManager.getSessionIdCookie().setMaxAge(60 * 60 * 1 * 1);
-        sessionManager.getSessionIdCookie().setHttpOnly(true);
-        return sessionManager;
-    }
-
-    @Bean(name = "sessionValidationScheduler")
-    public ExecutorServiceSessionValidationScheduler getExecutorServiceSessionValidationScheduler() {
-        ExecutorServiceSessionValidationScheduler sessionValidationScheduler = new ExecutorServiceSessionValidationScheduler();
-        sessionValidationScheduler.setInterval(60 * 60 * 1 * 1 * 1000);
-        return sessionValidationScheduler;
-    }
-
-    /**
-     * 开启shiro aop注解支持. 使用代理方式; 所以需要开启代码支持;
-     *
-     * @param securityManager
-     * @return
-     */
-    @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
-        AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
-        advisor.setSecurityManager(securityManager);
-        return advisor;
-    }
-
-    @Bean(name = "shiroDialect")
-    public ShiroDialect shiroDialect() {
-        return new ShiroDialect();
+    protected JwtAuthenticator jwtAuthenticator() {
+        JwtAuthenticator jwtAuthenticator = new JwtAuthenticator();
+        jwtAuthenticator.addSignatureConfiguration(new SecretSignatureConfiguration(salt));
+        jwtAuthenticator.addEncryptionConfiguration(new SecretEncryptionConfiguration(salt));
+        return jwtAuthenticator;
     }
 
     /**
@@ -257,8 +105,7 @@ public class ShiroCasConfig {
      */
     @Bean
     public CasConfiguration casConfiguration() {
-
-        CasConfiguration casConfiguration = new CasConfiguration(loginUrl);
+        CasConfiguration casConfiguration = new CasConfiguration(casLoginUrl);
         casConfiguration.setProtocol(CasProtocol.CAS30);
         casConfiguration.setPrefixUrl(prefixUrl);
         return casConfiguration;
@@ -297,7 +144,7 @@ public class ShiroCasConfig {
         // 设置默认client
         Clients clients = new Clients();
         // token校验器，可以用HeaderClient更安全
-        ParameterClient parameterClient = new ParameterClient("token", jwtAuthenticator);
+        ParameterClient parameterClient = new ParameterClient("token", jwtAuthenticator());
         parameterClient.setSupportGetRequest(true);
         parameterClient.setName("jwt");
         // 支持的client全部设置进去
@@ -312,47 +159,174 @@ public class ShiroCasConfig {
         return config;
     }
 
-    @Bean
+    /**
+     * 身份认证realm(账号密码校验；权限等)
+     */
+    @Bean(name = "pac4jRealm")
+    public Realm pac4jRealm() {
+        return new ShiroCasRealm();
+    }
+
+    @Bean(name = "pac4jSubjectFactory")
     public SubjectFactory pac4jSubjectFactory() {
         return new Pac4jSubjectFactory();
     }
 
+    @Bean
+    public SecurityManager securityManager() {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        // 设置自定义Realm
+        securityManager.setRealm(pac4jRealm());
+        securityManager.setSubjectFactory(pac4jSubjectFactory());
+        // 注入缓存管理器
+        securityManager.setCacheManager(redisCacheManager());
+        // 记住密码管理
+        securityManager.setRememberMeManager(rememberMeManager());
+        // session管理
+        securityManager.setSessionManager(sessionManager());
+
+        return securityManager;
+    }
+
+    @Bean(name = "shiroFilter")
+    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
+        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        shiroFilterFactoryBean.setSecurityManager(securityManager);
+
+        Map<String, Filter> filters = new HashMap<>();
+        SecurityFilter casSecurityFilter = new SecurityFilter();
+        casSecurityFilter.setClients("cas,rest,jwt");
+        casSecurityFilter.setConfig(casConfig());
+        filters.put("casSecurityFilter", casSecurityFilter);
+        CallbackFilter callbackFilter = new CallbackFilter();
+        callbackFilter.setConfig(casConfig());
+        filters.put("callbackFilter", callbackFilter);
+
+        LogoutFilter logoutFilter = new LogoutFilter();
+        logoutFilter.setConfig(casConfig());
+        logoutFilter.setCentralLogout(true);
+        logoutFilter.setDefaultUrl(serviceUrl);
+        filters.put("logoutFilter", logoutFilter);
+
+        shiroFilterFactoryBean.setFilters(filters);
+
+        // 拦截器
+        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
+
+        /**
+         * 过滤链定义，从上向下顺序执行，一般将 /**放在最为下边 。 anon 不需要认证 authc 需要认证 user
+         * 验证通过或RememberMe登录的都可以
+         */
+        // 开放的静态资源
+        filterChainDefinitionMap.put("/favicon.ico", "anon");// 网站图标
+        filterChainDefinitionMap.put("/static/**", "anon");// 配置static文件下资源能被访问
+        filterChainDefinitionMap.put("/css/**", "anon");
+        filterChainDefinitionMap.put("/font/**", "anon");
+        filterChainDefinitionMap.put("/img/**", "anon");
+        filterChainDefinitionMap.put("/js/**", "anon");
+        filterChainDefinitionMap.put("/plugins/**", "anon");
+        filterChainDefinitionMap.put("/kaptcha.jpg", "anon");// 图片验证码(kaptcha框架)
+        filterChainDefinitionMap.put("/api/**", "anon");// API接口
+        filterChainDefinitionMap.put("/xlsFile/**", "anon");
+        filterChainDefinitionMap.put("/upload/**", "anon");
+        filterChainDefinitionMap.put("/solr/**", "anon");
+
+        // swagger接口文档
+        filterChainDefinitionMap.put("/v2/api-docs", "anon");
+        filterChainDefinitionMap.put("/webjars/**", "anon");
+        filterChainDefinitionMap.put("/swagger-resources/**", "anon");
+        filterChainDefinitionMap.put("/swagger-ui.html", "anon");
+
+        // 其他的
+        filterChainDefinitionMap.put("/druid/**", "anon");
+        filterChainDefinitionMap.put("/actuator/**", "anon");
+        filterChainDefinitionMap.put("/ws/**", "anon");
+        filterChainDefinitionMap.put("/qr/**", "anon");
+        filterChainDefinitionMap.put("/test/**", "anon");
+
+        filterChainDefinitionMap.put("/callback", "callbackFilter");
+        filterChainDefinitionMap.put("/logout", "logoutFilter");
+        filterChainDefinitionMap.put("/**", "casSecurityFilter");
+
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+
+        return shiroFilterFactoryBean;
+    }
+
     /**
-     * cas核心过滤器，把支持的client写上，filter过滤时才会处理，clients必须在casConfig.clients已经注册
+     * cookie对象;
      *
      * @return
      */
     @Bean
-    public Filter casSecurityFilter() {
-        SecurityFilter filter = new SecurityFilter();
-        filter.setClients("cas,rest,jwt");
-        filter.setConfig(casConfig());
-        return filter;
+    public SimpleCookie rememberMeCookie() {
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        // 记住我cookie生效时间1小时 ,单位秒
+        simpleCookie.setMaxAge(60 * 60 * 1 * 1);
+        simpleCookie.setPath("/hdw-dubbo");
+        simpleCookie.setHttpOnly(true);
+        return simpleCookie;
     }
 
     /**
-     * JWT Token 生成器，对CommonProfile生成然后每次携带token访问
-     *
-     * @return
-     */
-    @SuppressWarnings("rawtypes")
-    @Bean
-    protected JwtGenerator jwtGenerator() {
-        return new JwtGenerator(new SecretSignatureConfiguration(salt), new SecretEncryptionConfiguration(salt));
-    }
-
-    /**
-     * JWT校验器，也就是目前设置的ParameterClient进行的校验器，是rest/或者前后端分离的核心校验器
+     * cookie管理对象;
      *
      * @return
      */
     @Bean
-    protected JwtAuthenticator jwtAuthenticator() {
-        JwtAuthenticator jwtAuthenticator = new JwtAuthenticator();
-        jwtAuthenticator.addSignatureConfiguration(new SecretSignatureConfiguration(salt));
-        jwtAuthenticator.addEncryptionConfiguration(new SecretEncryptionConfiguration(salt));
-        return jwtAuthenticator;
+    public CookieRememberMeManager rememberMeManager() {
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(rememberMeCookie());
+        cookieRememberMeManager.setCipherKey(Base64.decode("5aaC5qKm5oqA5pyvAAAAAA=="));
+        return cookieRememberMeManager;
     }
 
+    @Bean(name = "sessionManager")
+    public SessionManager sessionManager() {
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        sessionManager.setGlobalSessionTimeout(60 * 60 * 1 * 1 * 1000);
+        sessionManager.setSessionDAO(sessionDAO);
+        // url中是否显示session Id
+        sessionManager.setSessionIdUrlRewritingEnabled(false);
+        // 删除失效的session
+        sessionManager.setDeleteInvalidSessions(true);
+
+        //会话验证
+        sessionManager.setSessionValidationScheduler(getExecutorServiceSessionValidationScheduler());
+        sessionManager.setSessionValidationSchedulerEnabled(true);
+
+        //设置cookie
+        sessionManager.setSessionIdCookieEnabled(true);
+        sessionManager.getSessionIdCookie().setName("session-z-id");
+        sessionManager.getSessionIdCookie().setPath("/hdw-dubbo");
+        sessionManager.getSessionIdCookie().setMaxAge(60 * 60 * 1 * 1);
+        sessionManager.getSessionIdCookie().setHttpOnly(true);
+        return sessionManager;
+    }
+
+    @Bean(name = "sessionValidationScheduler")
+    public ExecutorServiceSessionValidationScheduler getExecutorServiceSessionValidationScheduler() {
+        ExecutorServiceSessionValidationScheduler sessionValidationScheduler = new ExecutorServiceSessionValidationScheduler();
+        sessionValidationScheduler.setInterval(60 * 60 * 1 * 1 * 1000);
+        return sessionValidationScheduler;
+    }
+
+    /**
+     * 开启shiro aop注解支持. 使用代理方式; 所以需要开启代码支持;
+     *
+     * @param securityManager
+     * @return
+     */
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
+        AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
+        advisor.setSecurityManager(securityManager);
+        return advisor;
+    }
+
+    @Bean(name = "shiroDialect")
+    public ShiroDialect shiroDialect() {
+        return new ShiroDialect();
+    }
 
 }

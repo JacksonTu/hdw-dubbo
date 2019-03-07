@@ -72,13 +72,7 @@ public class EnterpriseJobController extends BaseController {
         try {
             //获取企业ID前缀，生成UUID
             ShiroUser shiroUser = ShiroKit.getUser();
-            String prefix = "HDWX";
-            if (shiroUser.getUserType() == 1) {
-                prefix = enterpriseService.getById(ShiroKit.getUser().getEnterpriseId()).getPrefix();
-            } else if (shiroUser.getUserType() == 2) {
-                prefix = enterpriseService.getById(ShiroKit.getEnterpriseIdByUser().get(0)).getPrefix();
-            }
-            enterpriseJob.setId(UUIDGenerator.getEnterpriseId(prefix));
+            enterpriseJob.setId(UUIDGenerator.getUUID());
             enterpriseJob.setCreateTime(new Date());
             enterpriseJob.setCreateUser(ShiroKit.getUser().getLoginName());
             enterpriseJobService.save(enterpriseJob);

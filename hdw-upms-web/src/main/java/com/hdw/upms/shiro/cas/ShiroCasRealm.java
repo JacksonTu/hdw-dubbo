@@ -62,10 +62,6 @@ public class ShiroCasRealm extends Pac4jRealm {
         Pac4jPrincipal principal = new Pac4jPrincipal(profiles);
 
         String loginName = principal.getProfile().getId();
-
-        Session session = SecurityUtils.getSubject().getSession();
-        session.setAttribute("user", loginName);
-
         UserVo userVo = sysUserService.selectByLoginName(loginName);
         // 账号不存在
         if (userVo == null) {

@@ -353,7 +353,7 @@ public class EnterpriseController extends UpLoadController {
                     String fileName = uploadFileUrl.get("fileName");
                     String filePah = uploadFileUrl.get("filePath");
                     SysFile sysFile = new SysFile();
-                    sysFile.setId(UUIDGenerator.getEnterpriseId(prefix));
+                    sysFile.setId(UUIDGenerator.getUUID());
                     sysFile.setRecordId(id);
                     sysFile.setTableId("t_enterprise");
                     sysFile.setAttachmentGroup("企业");
