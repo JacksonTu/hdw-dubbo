@@ -131,7 +131,8 @@ public class CommonResult<T> implements Serializable {
     }
 
     public CommonResult msg(String message) {
-        this.msg = i18n(ErrorCode.getHttpCode(this.code).getMsg(), message);
+        //this.msg = i18n(ErrorCode.getHttpCode(this.code).getMsg(), message);
+        this.msg = message;
         return this;
     }
 
