@@ -4,8 +4,8 @@ import com.hdw.api.base.enterprise.entity.Enterprise;
 import com.hdw.api.base.enterprise.service.IEnterpriseService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
@@ -15,7 +15,6 @@ import java.util.List;
  * @Author JacksonTu
  * @Date 2020/4/8 17:25
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
 public class ServerNoticeApplicationTests {

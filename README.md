@@ -41,6 +41,7 @@ hdw-dubbo
     ├── hdw-common-starter-datasource          -- 系统数据库自动装配starter  
     ├── hdw-common-starter-redis               -- 系统redis自动装配starter
     ├── hdw-common-starter-redisson            -- 系统redisson自动装配starter
+	├── hdw-common-starter-activemq            -- 系统activemq自动装配starter
 ├── hdw-api-base                      -- 基础服务接口
 ├── hdw-server-base                   -- 基础服务提供者服务器[port = 8181]
 ├── hdw-api-notice                    -- 系统消息服务接口
@@ -63,7 +64,7 @@ hdw-dubbo
     + Nodejs (v10.16.0+)
    
 2. 执行创建数据库hdw_dubbo并执行sql脚本
-    
+   
     + docs/sql/hdw_dubbo.sql
     
 3. 启动Zookeeper服务发现和注册中心
@@ -110,6 +111,30 @@ hdw-dubbo
      ```bush  
         -Xmx256m -Xms256m -Xss1m -Xmn128m -XX:+PrintGCDetails  
      ```
+     
+10. 如果想使用ActiveMQ,需要引入hdw-common-starter-activemq组件 
+    在pom.xml加入
+
+   ```
+       <dependency>
+           <groupId>com.hdw</groupId>
+           <artifactId>hdw-common-starter-redisson</artifactId>
+           <version>${hdw-common.version}</version>
+       </dependency>
+   ```
+   在application-dev.yml、application-prod.yml、application-test.yml中分别加入
+
+   ```
+     activemq:
+       broker-url: tcp://localhost:61616
+       user: admin
+       password: admin
+       in-memory: false
+       pool:
+         enabled: true
+         max-connections: 100
+         idle-timeout: 30s
+   ```
 
 #### 系统预览
 <table>
@@ -140,7 +165,7 @@ hdw-dubbo
 
 #### 更新日志
  ##### v3.1.0 
-  + SpringBoot更新到2.3.6
+  + SpringBoot更新到2.4.5
   + Dubbo更新到2.7.8
   + 层级调整
   + 优化消息服务

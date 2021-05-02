@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.6.RELEASE</version>
+        <version>2.4.5</version>
         <relativePath/>
     </parent>
 
@@ -31,10 +31,10 @@
         <java.version>1.8</java.version>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 
-        <spring-boot.version>2.3.6.RELEASE</spring-boot.version>
-        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
-        <spring-boot-admin.version>2.3.0</spring-boot-admin.version>
-        <alibaba.cloud.version>2.2.3.RELEASE</alibaba.cloud.version>
+        <spring-boot.version>2.4.5</spring-boot.version>
+        <spring-cloud.version>2020.0.2</spring-cloud.version>
+        <spring-boot-admin.version>2.4.1</spring-boot-admin.version>
+        <alibaba.cloud.version>2021.1</alibaba.cloud.version>
         <alibaba.fastjson.version>1.2.75</alibaba.fastjson.version>
         <alibaba.druid.version>1.2.3</alibaba.druid.version>
         <dubbo.version>2.7.8</dubbo.version>
@@ -50,14 +50,14 @@
         <httpclient.version>4.5.12</httpclient.version>
         <pinyin4j.version>2.5.1</pinyin4j.version>
         <com.google.zxing.version>3.4.0</com.google.zxing.version>
-        <hutool.version>5.5.1</hutool.version>
+        <hutool.version>5.6.3</hutool.version>
         <pdfbox.version>2.0.19</pdfbox.version>
-        <knife4j.version>3.0.1</knife4j.version>
+        <knife4j.version>3.0.2</knife4j.version>
         <fastdfs-spring-boot-starter.version>0.2.0</fastdfs-spring-boot-starter.version>
-        <mybatis-plus.version>3.4.1</mybatis-plus.version>
-        <dynamic-datasource-spring-boot-starter.version>3.2.1</dynamic-datasource-spring-boot-starter.version>
+        <mybatis-plus.version>3.4.2</mybatis-plus.version>
+        <dynamic-datasource-spring-boot-starter.version>3.3.2</dynamic-datasource-spring-boot-starter.version>
         <p6spy.version>3.9.1</p6spy.version>
-        <redisson.version>3.14.0</redisson.version>
+        <redisson.version>3.15.2</redisson.version>
         <jsoup.version>1.13.1</jsoup.version>
         <jjwt.version>0.9.0</jjwt.version>
         <shiro.version>1.6.0</shiro.version>

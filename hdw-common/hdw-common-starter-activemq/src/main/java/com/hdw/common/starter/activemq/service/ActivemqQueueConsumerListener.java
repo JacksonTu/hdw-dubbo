@@ -1,4 +1,4 @@
-package com.hdw.web.base.mq.service;
+package com.hdw.common.starter.activemq.service;
 
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;

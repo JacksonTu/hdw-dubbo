@@ -1,7 +1,11 @@
-package com.hdw.web.base.mq.configure;
+package com.hdw.common.starter.activemq.configure;
 
+import com.hdw.common.starter.activemq.service.ActivemqQueueConsumerListener;
+import com.hdw.common.starter.activemq.service.ActivemqSendMsgService;
+import com.hdw.common.starter.activemq.service.ActivemqTopicConsumerListener;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
@@ -79,5 +83,23 @@ public class ActivemqConfigure {
         factory.setConnectionFactory(connectionFactory);
         factory.setPubSubDomain(true);
         return factory;
+    }
+
+    @Bean
+    @ConditionalOnBean(name = "jmsTemplate")
+    public ActivemqSendMsgService activemqSendMsgService() {
+        return new ActivemqSendMsgService();
+    }
+
+    @Bean
+    @ConditionalOnBean(name = "jmsTemplate")
+    public ActivemqTopicConsumerListener activemqTopicConsumerListener() {
+        return new ActivemqTopicConsumerListener();
+    }
+
+    @Bean
+    @ConditionalOnBean(name = "jmsTemplate")
+    public ActivemqQueueConsumerListener activemqQueueConsumerListener() {
+        return new ActivemqQueueConsumerListener();
     }
 }

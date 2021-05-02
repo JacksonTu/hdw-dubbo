@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.hdw.common.starter.activemq.configure.ActivemqConfigure
+

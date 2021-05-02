@@ -1,4 +1,4 @@
-package com.hdw.web.base.mq.service;
+package com.hdw.common.starter.activemq.service;
 
 import com.hdw.common.core.utils.JacksonUtil;
 import lombok.extern.slf4j.Slf4j;

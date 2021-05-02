@@ -19,7 +19,7 @@ public class CorsConfigure {
     private CorsConfiguration buildConfig() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         // 1 设置访问源地址
-        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedOriginPattern("*");
         // 2 设置访问源请求头
         corsConfiguration.addAllowedHeader("*");
         // 3 设置访问源请求方法

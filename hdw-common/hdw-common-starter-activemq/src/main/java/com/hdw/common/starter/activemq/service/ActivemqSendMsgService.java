@@ -1,9 +1,8 @@
-package com.hdw.web.base.mq.service;
+package com.hdw.common.starter.activemq.service;
 
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.command.ActiveMQTopic;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.jms.Queue;
@@ -15,7 +14,6 @@ import java.io.Serializable;
  * @Author JacksonTu
  * @Date 2018/5/23 16:01
  */
-@Component
 public class ActivemqSendMsgService {
 
     @Resource

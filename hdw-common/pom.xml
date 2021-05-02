@@ -23,5 +23,6 @@
         <module>hdw-common-starter-datasource</module>
         <module>hdw-common-starter-redis</module>
         <module>hdw-common-starter-redisson</module>
+        <module>hdw-common-starter-activemq</module>
     </modules>
 </project>
