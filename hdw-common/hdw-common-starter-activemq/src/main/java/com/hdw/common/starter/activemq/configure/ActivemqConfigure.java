@@ -60,13 +60,13 @@ public class ActivemqConfigure {
     /**
      * 在Queue模式中，对消息的监听需要对containerFactory进行配置
      *
-     * @param connectionFactory
+     * @param cachingConnectionFactory
      * @return
      */
     @Bean("queueListener")
-    public JmsListenerContainerFactory<?> queueJmsListenerContainerFactory(CachingConnectionFactory connectionFactory) {
+    public JmsListenerContainerFactory<?> queueJmsListenerContainerFactory(CachingConnectionFactory cachingConnectionFactory) {
         SimpleJmsListenerContainerFactory factory = new SimpleJmsListenerContainerFactory();
-        factory.setConnectionFactory(connectionFactory);
+        factory.setConnectionFactory(cachingConnectionFactory);
         factory.setPubSubDomain(false);
         return factory;
     }
@@ -74,13 +74,13 @@ public class ActivemqConfigure {
     /**
      * 在Topic模式中，对消息的监听需要对containerFactory进行配置
      *
-     * @param connectionFactory
+     * @param cachingConnectionFactory
      * @return
      */
     @Bean("topicListener")
-    public JmsListenerContainerFactory<?> topicJmsListenerContainerFactory(CachingConnectionFactory connectionFactory) {
+    public JmsListenerContainerFactory<?> topicJmsListenerContainerFactory(CachingConnectionFactory cachingConnectionFactory) {
         SimpleJmsListenerContainerFactory factory = new SimpleJmsListenerContainerFactory();
-        factory.setConnectionFactory(connectionFactory);
+        factory.setConnectionFactory(cachingConnectionFactory);
         factory.setPubSubDomain(true);
         return factory;
     }

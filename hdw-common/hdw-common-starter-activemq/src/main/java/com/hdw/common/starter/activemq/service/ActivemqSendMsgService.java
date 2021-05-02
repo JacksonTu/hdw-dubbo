@@ -7,7 +7,6 @@ import org.springframework.jms.core.JmsTemplate;
 import javax.annotation.Resource;
 import javax.jms.Queue;
 import javax.jms.Topic;
-import java.io.Serializable;
 
 /**
  * @Description ActiveMQ 生产者服务类
@@ -24,11 +23,11 @@ public class ActivemqSendMsgService {
      * 发送消息
      *
      * @param queueName 队列名称
-     * @param message   消息
+     * @param obj   消息
      */
-    public void sendMessage(String queueName, String message) {
+    public void sendMessage(String queueName, Object obj) {
         Queue queue = new ActiveMQQueue(queueName);
-        jmsTemplate.convertAndSend(queue, message);
+        jmsTemplate.convertAndSend(queue, obj);
     }
 
     /**
@@ -36,9 +35,9 @@ public class ActivemqSendMsgService {
      * 发送消息
      *
      * @param topicName topic名称
-     * @param obj
+     * @param obj 消息
      */
-    public void sendTopic(final String topicName, final Serializable obj) {
+    public void sendTopic(String topicName, Object obj) {
         Topic topic = new ActiveMQTopic(topicName);
         jmsTemplate.convertAndSend(topic, obj);
     }

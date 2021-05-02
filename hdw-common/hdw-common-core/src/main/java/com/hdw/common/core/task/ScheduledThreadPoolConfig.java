@@ -22,7 +22,7 @@ public class ScheduledThreadPoolConfig implements SchedulingConfigurer {
 
     /**
      * 对于CPU密集型任务，最大线程数是CPU线程数+1。对于IO密集型任务，尽量多配点，可以是CPU线程数*2，或者CPU线程数/(1-阻塞系数)。
-     * maxPoolSize=new Double(Math.floor(Runtime.getRuntime().availableProcessors()/(1-0.9))).intValue()
+     * maxPoolSize=(int) (Runtime.getRuntime().availableProcessors() / (1 - 0.9))
      *
      * @param taskRegistrar
      */
@@ -35,10 +35,11 @@ public class ScheduledThreadPoolConfig implements SchedulingConfigurer {
     @Bean(destroyMethod = "shutdown")
     public ThreadPoolTaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler executor = new ThreadPoolTaskScheduler();
+        executor.initialize();
         // 设置默认线程名称
         executor.setThreadNamePrefix(env.getProperty("spring.application.name") + "-task");
         // 设置最大线程数
-        executor.setPoolSize(new Double(Math.floor(Runtime.getRuntime().availableProcessors() / (1 - 0.9))).intValue());
+        executor.setPoolSize((int) (Runtime.getRuntime().availableProcessors() / (1 - 0.9)));
         // 设置线程活跃时间（秒）
         executor.setAwaitTerminationSeconds(60);
         // 设置拒绝策略

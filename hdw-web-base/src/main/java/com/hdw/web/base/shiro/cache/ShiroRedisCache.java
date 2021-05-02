@@ -41,13 +41,18 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
 
     @Override
     public V remove(K k) throws CacheException {
-        V obj = (V) this.redisTemplate.opsForValue().get(this.getRedisCacheKey(k));
-        return obj;
+        if (k == null) {
+            return null;
+        } else {
+            V obj = (V) this.redisTemplate.opsForValue().get(this.getRedisCacheKey(k));
+            this.redisTemplate.delete(this.getRedisCacheKey(k));
+            return obj;
+        }
     }
 
     @Override
     public void clear() throws CacheException {
-        Set keys = this.redisTemplate.keys(this.cacheKeyPrefix + ":");
+        Set keys = this.redisTemplate.keys(this.cacheKeyPrefix + "*");
         if (null != keys && keys.size() > 0) {
             Iterator iterator = keys.iterator();
             this.redisTemplate.delete(iterator.next());

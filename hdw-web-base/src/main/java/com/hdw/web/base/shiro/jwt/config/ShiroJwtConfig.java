@@ -39,11 +39,15 @@ public class ShiroJwtConfig {
     @Resource(name = "shiroRedisTemplate")
     private RedisTemplate redisTemplate;
 
-    //TODO:全局缓存时间，单位为秒
+    /**
+     * 全局缓存时间，单位为秒
+     */
     @Value("${hdw.jwt.expiration}")
     private int cacheLive;
 
-    //TODO:全局缓存名称前缀，默认为应用名
+    /**
+     * 全局缓存名称前缀，默认为应用名
+     */
     @Value("${spring.application.name}")
     private String cacheKeyPrefix;
 

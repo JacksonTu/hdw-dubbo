@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -60,6 +61,12 @@ public class SysLoginController {
 
     @Resource
     private JwtTokenUtil jwtTokenUtil;
+
+    /**
+     * 全局缓存名称前缀，默认为应用名
+     */
+    @Value("${spring.application.name}")
+    private String cacheKeyPrefix;
 
     /**
      * 获取验证码
@@ -160,10 +167,13 @@ public class SysLoginController {
         String username = jwtTokenUtil.getUserNameFromToken(token);
         LoginUserVo loginUserVo = userService.selectLoginUserVoByLoginName(username);
         if (!org.springframework.util.ObjectUtils.isEmpty(loginUserVo)) {
-            //TODO:调用Shiro的logout
-            SecurityUtils.getSubject().logout();
             //TODO:清空用户登录Shiro权限缓存
             sysLogService.addLog(loginUserVo.getLoginName(), "用户名: " + loginUserVo.getName() + ",退出成功！", 1, null);
+            //清空用户登录Shiro权限缓存
+            redisService.del(cacheKeyPrefix+":shiro-cache:" + token);
+            redisService.del(cacheKeyPrefix+":shiro-cache:" + "com.hdw.shiro.jwt.JwtRealm_0");
+            //TODO:调用Shiro的logout
+            SecurityUtils.getSubject().logout();
             return CommonResult.success("退出登录成功!");
         } else {
             return CommonResult.failed("Token无效!");
