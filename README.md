@@ -165,7 +165,7 @@ hdw-dubbo
 
 #### 更新日志
  ##### v3.1.0 
-  + SpringBoot更新到2.4.5
+  + SpringBoot更新到2.5.0
   + Dubbo更新到2.7.8
   + 层级调整
   + 优化消息服务
