@@ -3,7 +3,6 @@ package com.hdw.web.base.system.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.hdw.common.core.api.CommonResult;
-import com.hdw.common.core.utils.QRCodeUtil;
 import com.luhuiguo.fastdfs.domain.StorePath;
 import com.luhuiguo.fastdfs.exception.FdfsUnsupportStorePathException;
 import com.luhuiguo.fastdfs.service.FastFileStorageClient;
@@ -465,21 +464,5 @@ public abstract class UpLoadController {
                 }
             }
         }
-    }
-
-    /**
-     * 创建二维码
-     *
-     * @param qrResource 内容
-     * @return
-     */
-    public String createQrcode(String qrResource) {
-        String pngDir = QRCodeUtil.createQRCode(fileUploadPrefix + File.separator + "upload" + File.separator + "qr" + File.separator, qrResource);
-        String qrDir = "";
-        Map<String, String> params = uploadToFastDFS(pngDir);
-        if (null != params) {
-            qrDir = params.get("filePath");
-        }
-        return qrDir;
     }
 }

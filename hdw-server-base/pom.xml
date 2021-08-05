@@ -39,18 +39,6 @@
             <version>${hdw-common.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>${apache.commons-text.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-configuration</groupId>
-            <artifactId>commons-configuration</artifactId>
-            <version>${apache.commons-configuration.version}</version>
-        </dependency>
-
         <!-- velocity-engine-core -->
         <dependency>
             <groupId>org.apache.velocity</groupId>

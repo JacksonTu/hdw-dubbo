@@ -1,20 +1,15 @@
 package com.hdw.web.base;
 
 import com.hdw.api.base.enterprise.entity.Enterprise;
-import com.hdw.common.core.constant.CommonConstant;
 import com.hdw.api.base.enterprise.service.IEnterpriseService;
 import com.hdw.web.base.interceptor.InterceptorProperties;
 import com.hdw.web.base.mail.dto.MailDto;
 import com.hdw.web.base.mail.service.MailService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
-import org.jasypt.encryption.pbe.config.EnvironmentPBEConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import javax.annotation.Resource;
 
 /**
@@ -22,8 +17,8 @@ import javax.annotation.Resource;
  * @Author JacksonTu
  * @Date 2020/4/8 17:25
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class WebBaseApplicationTests {
     @DubboReference
     private IEnterpriseService enterpriseService;
@@ -88,44 +83,6 @@ public class WebBaseApplicationTests {
         }
     }
 
-    /**
-     * 加密
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testEncrypt() throws Exception {
-        StandardPBEStringEncryptor standardPBEStringEncryptor = new StandardPBEStringEncryptor();
-        EnvironmentPBEConfig config = new EnvironmentPBEConfig();
-        //TODO: 加密的算法，这个算法是默认的
-        config.setAlgorithm("PBEWithMD5AndDES");
-        //TODO: 加密的密钥
-        config.setPassword(CommonConstant.JWT_DEFAULT_ISSUER);
-        standardPBEStringEncryptor.setConfig(config);
-        //xy_world_way@126.com
-        String plainText = "abc123";
-        String encryptedText = standardPBEStringEncryptor.encrypt(plainText);
-        System.out.println(encryptedText);
-    }
-
-    /**
-     * 解密
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testDecrypt() throws Exception {
-        StandardPBEStringEncryptor standardPBEStringEncryptor = new StandardPBEStringEncryptor();
-        EnvironmentPBEConfig config = new EnvironmentPBEConfig();
-        //TODO: 加密的算法，这个算法是默认的
-        config.setAlgorithm("PBEWithMD5AndDES");
-        //TODO: 加密的密钥
-        config.setPassword(CommonConstant.JWT_DEFAULT_ISSUER);
-        standardPBEStringEncryptor.setConfig(config);
-        String encryptedText = "xRL1CVgzfFKBnPxCr+xjkg==";
-        String plainText = standardPBEStringEncryptor.decrypt(encryptedText);
-        System.out.println(plainText);
-    }
 
     @Test
     public void testSendEmail() {
