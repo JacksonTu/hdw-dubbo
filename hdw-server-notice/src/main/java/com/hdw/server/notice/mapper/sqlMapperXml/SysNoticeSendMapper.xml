@@ -31,9 +31,10 @@
     </resultMap>
 
     <select id="listByUserId" parameterType="java.lang.Long" resultType="java.lang.Long">
-	   select s.notice_id from t_sys_notice_send s
-	   where s.user_id = #{userId}
-	</select>
+        select s.notice_id
+        from t_sys_notice_send s
+        where s.user_id = #{userId}
+    </select>
 
 
     <select id="pageMyNoticeSend" resultMap="noticeMap">

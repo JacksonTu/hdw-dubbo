@@ -116,7 +116,7 @@ public class SysNoticeSendController {
             noticeSend.setReadFlag(WebsocketConstant.HAS_READ_FLAG);
             noticeSend.setReadTime(new Date());
             this.sysNoticeSendService.updateByUserIdAndNoticeId(noticeSend);
-            JSONObject obj=new JSONObject();
+            JSONObject obj = new JSONObject();
             obj.put(WebsocketConstant.MSG_CMD, WebsocketConstant.CMD_REVOKE);
             webSocket.sendAllMessage(obj.toJSONString());
             return CommonResult.success("");
@@ -160,7 +160,7 @@ public class SysNoticeSendController {
             noticeSend.setReadFlag(WebsocketConstant.HAS_READ_FLAG);
             noticeSend.setReadTime(new Date());
             this.sysNoticeSendService.updateByUserIdAndNoticeId(noticeSend);
-            JSONObject obj=new JSONObject();
+            JSONObject obj = new JSONObject();
             obj.put(WebsocketConstant.MSG_CMD, WebsocketConstant.CMD_REVOKE);
             webSocket.sendAllMessage(obj.toJSONString());
             return CommonResult.success("");

@@ -26,8 +26,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint("/ws/common/{userId}") //此注解相当于设置访问URL
 public class CommonWebSocket {
 
-    private static CopyOnWriteArraySet<CommonWebSocket> webSockets = new CopyOnWriteArraySet<>();
-    private static Map<String, Session> sessionPool = new HashMap<String, Session>();
+    private static final CopyOnWriteArraySet<CommonWebSocket> webSockets = new CopyOnWriteArraySet<>();
+    private static final Map<String, Session> sessionPool = new HashMap<String, Session>();
     private Session session;
 
     /**

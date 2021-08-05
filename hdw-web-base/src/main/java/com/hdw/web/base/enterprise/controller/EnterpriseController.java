@@ -49,7 +49,7 @@ public class EnterpriseController extends UpLoadController {
     @DubboReference
     private ISysFileService sysFileService;
 
-    private Map<String, List<Map<String, String>>> uploadFileUrls = new HashMap<String, List<Map<String, String>>>();
+    private final Map<String, List<Map<String, String>>> uploadFileUrls = new HashMap<String, List<Map<String, String>>>();
 
     /**
      * 企业列表
@@ -281,13 +281,13 @@ public class EnterpriseController extends UpLoadController {
                     sysFile.setAttachmentPath(filePah);
                     //附件类型(0-word,1-excel,2-pdf,3-jpg,png,4-其他等)
                     String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
-                    if ("doc".equals(fileType.toLowerCase()) || "docx".equals(fileType.toLowerCase())) {
+                    if ("doc".equalsIgnoreCase(fileType) || "docx".equalsIgnoreCase(fileType)) {
                         sysFile.setAttachmentType(0);
-                    } else if ("xls".equals(fileType.toLowerCase()) || "xlsx".equals(fileType.toLowerCase())) {
+                    } else if ("xls".equalsIgnoreCase(fileType) || "xlsx".equalsIgnoreCase(fileType)) {
                         sysFile.setAttachmentType(1);
-                    } else if ("pdf".equals(fileType.toLowerCase())) {
+                    } else if ("pdf".equalsIgnoreCase(fileType)) {
                         sysFile.setAttachmentType(2);
-                    } else if ("jpg".equals(fileType.toLowerCase()) || "png".equals(fileType.toLowerCase()) || "gif".equals(fileType.toLowerCase())) {
+                    } else if ("jpg".equalsIgnoreCase(fileType) || "png".equalsIgnoreCase(fileType) || "gif".equalsIgnoreCase(fileType)) {
                         sysFile.setAttachmentType(3);
                     } else {
                         sysFile.setAttachmentType(4);

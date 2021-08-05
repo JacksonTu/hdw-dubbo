@@ -52,20 +52,17 @@
     </select>
 
     <select id="selectResourceNodeListByRoleId" resultMap="BaseCommonResult">
-        SELECT
-        t.id,
-        t.role_id,
-        t.resource_id,
-        t2.id AS roleId,
-        t2.`name`	AS roleName,
-        t3.id AS resourceId,
-        t3.`name` AS resourceName
-        FROM
-            t_sys_role_resource t
-            INNER JOIN t_sys_role t2 ON t.role_id = t2.id
-            INNER JOIN t_sys_resource t3 ON t.resource_id = t3.id
-        WHERE
-            t.role_id = #{roleId}
-            AND t3.id NOT IN ( SELECT t.parent_id FROM t_sys_resource t WHERE t.role_id = #{roleId} )
+        SELECT t.id,
+               t.role_id,
+               t.resource_id,
+               t2.id     AS roleId,
+               t2.`name` AS roleName,
+               t3.id     AS resourceId,
+               t3.`name` AS resourceName
+        FROM t_sys_role_resource t
+                 INNER JOIN t_sys_role t2 ON t.role_id = t2.id
+                 INNER JOIN t_sys_resource t3 ON t.resource_id = t3.id
+        WHERE t.role_id = #{roleId}
+          AND t3.id NOT IN (SELECT t.parent_id FROM t_sys_resource t WHERE t.role_id = #{roleId})
     </select>
 </mapper>

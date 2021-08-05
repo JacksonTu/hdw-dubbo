@@ -90,58 +90,54 @@
     </select>
 
     <select id="selectByUserId" resultMap="RoleVoCommonResult" parameterType="java.lang.Long">
-        SELECT
-        t.id,
-        t.`name`,
-        t.seq,
-        t.description,
-        t.`status`,
-        t.create_time,
-        t.update_time,
-        t.create_user_id,
-        t3.id AS resourceId,
-        t3. NAME AS resourceName,
-        t3.parent_id AS resourceParentId,
-        t3.icon AS resourceIcon,
-        t3.url AS resourceUrl,
-        t3.seq AS resourceSeq,
-        t3.resource_type AS resourceType,
-        t3.`status` AS resourceStatus
-        FROM
-            t_sys_role t
-        LEFT JOIN t_sys_role_resource t2 ON t.id = t2.role_id
-        LEFT JOIN t_sys_resource t3 ON t2.resource_id = t3.id
-        LEFT JOIN t_sys_user_role t4 ON t.id = t4.role_id
-        LEFT JOIN t_sys_user t5 ON t4.user_id = t5.id
-        where t.`status`=0
-        and t3.`status`=0
-        and t5.id=#{userId}
+        SELECT t.id,
+               t.`name`,
+               t.seq,
+               t.description,
+               t.`status`,
+               t.create_time,
+               t.update_time,
+               t.create_user_id,
+               t3.id            AS resourceId,
+               t3.NAME          AS resourceName,
+               t3.parent_id     AS resourceParentId,
+               t3.icon          AS resourceIcon,
+               t3.url           AS resourceUrl,
+               t3.seq           AS resourceSeq,
+               t3.resource_type AS resourceType,
+               t3.`status`      AS resourceStatus
+        FROM t_sys_role t
+                 LEFT JOIN t_sys_role_resource t2 ON t.id = t2.role_id
+                 LEFT JOIN t_sys_resource t3 ON t2.resource_id = t3.id
+                 LEFT JOIN t_sys_user_role t4 ON t.id = t4.role_id
+                 LEFT JOIN t_sys_user t5 ON t4.user_id = t5.id
+        where t.`status` = 0
+          and t3.`status` = 0
+          and t5.id = #{userId}
     </select>
 
     <select id="selectByRoleId" resultMap="RoleVoCommonResult" parameterType="java.lang.Long">
-        SELECT
-        t.id,
-        t.`name`,
-        t.seq,
-        t.description,
-        t.`status`,
-        t.create_time,
-        t.update_time,
-        t.create_user_id,
-        t3.id AS resourceId,
-        t3. NAME AS resourceName,
-        t3.parent_id AS resourceParentId,
-        t3.icon AS resourceIcon,
-        t3.url AS resourceUrl,
-        t3.seq AS resourceSeq,
-        t3.resource_type AS resourceType,
-        t3.`status` AS resourceStatus
-        FROM
-            t_sys_role t
-        LEFT JOIN t_sys_role_resource t2 ON t.id = t2.role_id
-        LEFT JOIN t_sys_resource t3 ON t2.resource_id = t3.id
-        where t3.`status`=0
-        and t.id=#{roleId}
+        SELECT t.id,
+               t.`name`,
+               t.seq,
+               t.description,
+               t.`status`,
+               t.create_time,
+               t.update_time,
+               t.create_user_id,
+               t3.id            AS resourceId,
+               t3.NAME          AS resourceName,
+               t3.parent_id     AS resourceParentId,
+               t3.icon          AS resourceIcon,
+               t3.url           AS resourceUrl,
+               t3.seq           AS resourceSeq,
+               t3.resource_type AS resourceType,
+               t3.`status`      AS resourceStatus
+        FROM t_sys_role t
+                 LEFT JOIN t_sys_role_resource t2 ON t.id = t2.role_id
+                 LEFT JOIN t_sys_resource t3 ON t2.resource_id = t3.id
+        where t3.`status` = 0
+          and t.id = #{roleId}
     </select>
 
 </mapper>

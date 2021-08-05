@@ -16,11 +16,11 @@ import java.util.concurrent.TimeUnit;
 public class ShiroRedisCache<K, V> implements Cache<K, V> {
 
     //TODO:缓存存活时间
-    private long cacheLive;
+    private final long cacheLive;
     //TODO:缓存名称前缀
-    private String cacheKeyPrefix;
+    private final String cacheKeyPrefix;
 
-    private RedisTemplate redisTemplate;
+    private final RedisTemplate redisTemplate;
 
     public ShiroRedisCache(long cacheLive, String cacheKeyPrefix, RedisTemplate redisTemplate) {
         this.cacheLive = cacheLive;

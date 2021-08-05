@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
 /**
@@ -84,7 +84,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUser> 
                 //保存用户与企业关系关系
                 sysUserEnterpriseService.saveOrUpdateUserEnterprise(user.getId(), user.getEnterpriseIdList());
             });
-        }finally {
+        } finally {
 
         }
     }

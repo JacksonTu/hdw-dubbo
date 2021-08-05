@@ -23,7 +23,7 @@ public class ActivemqSendMsgService {
      * 发送消息
      *
      * @param queueName 队列名称
-     * @param obj   消息
+     * @param obj       消息
      */
     public void sendMessage(String queueName, Object obj) {
         Queue queue = new ActiveMQQueue(queueName);
@@ -35,7 +35,7 @@ public class ActivemqSendMsgService {
      * 发送消息
      *
      * @param topicName topic名称
-     * @param obj 消息
+     * @param obj       消息
      */
     public void sendTopic(String topicName, Object obj) {
         Topic topic = new ActiveMQTopic(topicName);

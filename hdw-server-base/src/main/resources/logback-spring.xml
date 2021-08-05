@@ -11,7 +11,8 @@
     <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n：是换行符-->
     <property name="log.colorPattern"
               value="%magenta(%d{'yyyy-MM-dd HH:mm:ss.SSS',GMT+8:00}) %highlight(%-5level) %boldCyan(${springAppName:-}) %yellow(%thread) %green(%logger) %msg%n"/>
-    <property name="log.pattern" value="%d{'yyyy-MM-dd HH:mm:ss.SSS',GMT+8:00} %-5level ${springAppName:-} %thread %logger %msg%n"/>
+    <property name="log.pattern"
+              value="%d{'yyyy-MM-dd HH:mm:ss.SSS',GMT+8:00} %-5level ${springAppName:-} %thread %logger %msg%n"/>
     <!-- 活动文件的大小 -->
     <property name="max.file.size" value="500MB"/>
     <!-- 保留的归档文件的最大数量 -->

@@ -193,7 +193,7 @@ public abstract class UpLoadController {
             if ((localFilePath != null) && (localFilePath.length() > 0)) {
                 int dot = localFilePath.lastIndexOf(File.separator);
                 if ((dot > -1) && (dot < (localFilePath.length() - 1))) {
-                    fileName = localFilePath.substring(dot + 1, localFilePath.length());
+                    fileName = localFilePath.substring(dot + 1);
                 }
             }
             StorePath storePath = fastFileStorageClient.uploadFile(bytes, FilenameUtils.getExtension(fileName));

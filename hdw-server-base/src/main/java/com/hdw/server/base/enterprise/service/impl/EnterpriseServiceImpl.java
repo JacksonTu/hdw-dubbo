@@ -29,8 +29,8 @@ public class EnterpriseServiceImpl extends BaseServiceImpl<EnterpriseMapper, Ent
 
     @Override
     public Enterprise saveEnterprise(Enterprise enterprise) {
-        boolean flag=this.save(enterprise);
-        if(flag){
+        boolean flag = this.save(enterprise);
+        if (flag) {
             return enterprise;
         }
         return null;

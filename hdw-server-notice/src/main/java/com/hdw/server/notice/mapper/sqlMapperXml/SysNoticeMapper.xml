@@ -29,12 +29,13 @@
 
 
     <select id="pageUnreadMsg" resultMap="noticeMap">
-       select * from t_sys_notice
-	   where send_status = '1'
-	   and del_flag = '0'
-	   and msg_category = #{msgCategory}
-	   and id IN ( select notice_id from t_sys_notice_send where user_id = #{userId} and read_flag = '0')
-	   order by create_time DESC
+        select *
+        from t_sys_notice
+        where send_status = '1'
+          and del_flag = '0'
+          and msg_category = #{msgCategory}
+          and id IN (select notice_id from t_sys_notice_send where user_id = #{userId} and read_flag = '0')
+        order by create_time DESC
     </select>
 
 </mapper>

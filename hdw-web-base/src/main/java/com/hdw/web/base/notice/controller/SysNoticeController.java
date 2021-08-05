@@ -195,7 +195,7 @@ public class SysNoticeController {
                 boolean flag = this.sysNoticeService.updateById(notice);
                 if (flag) {
                     message = "成功";
-                    JSONObject obj=new JSONObject();
+                    JSONObject obj = new JSONObject();
                     obj.put(WebsocketConstant.MSG_CMD, WebsocketConstant.CMD_REVOKE);
                     webSocket.sendAllMessage(obj.toJSONString());
                 }

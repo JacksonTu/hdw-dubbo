@@ -132,33 +132,26 @@
 
     <!-- 查询用户的所有菜单ID -->
     <select id="selectResourceIdListByUserId" resultType="long">
-		SELECT DISTINCT
-	    rm.resource_id
-        FROM
-	    t_sys_user_role ur
-        LEFT JOIN t_sys_role_resource rm ON ur.role_id = rm.role_id
-        WHERE
-	    ur.user_id = #{userId}
-	</select>
+        SELECT DISTINCT rm.resource_id
+        FROM t_sys_user_role ur
+                 LEFT JOIN t_sys_role_resource rm ON ur.role_id = rm.role_id
+        WHERE ur.user_id = #{userId}
+    </select>
 
     <!-- 查询用户的所有权限 -->
     <select id="selectPerms" resultType="string">
-		SELECT
-        m.url
-        FROM
-            t_sys_user_role ur
-        LEFT JOIN t_sys_role_resource rm ON ur.role_id = rm.role_id
-        LEFT JOIN t_sys_resource m ON rm.resource_id = m.id
-        WHERE
-        ur.user_id = #{userId}
-	</select>
+        SELECT m.url
+        FROM t_sys_user_role ur
+                 LEFT JOIN t_sys_role_resource rm ON ur.role_id = rm.role_id
+                 LEFT JOIN t_sys_resource m ON rm.resource_id = m.id
+        WHERE ur.user_id = #{userId}
+    </select>
 
     <!-- 查询用户的角色 -->
     <select id="selectRoles" resultType="string">
-		select t2.name
-		from t_sys_user_role t
-		INNER JOIN t_sys_role t2 on t.role_id=t2.id
-		where
-        t.user_id = #{userId}
-	</select>
+        select t2.name
+        from t_sys_user_role t
+                 INNER JOIN t_sys_role t2 on t.role_id = t2.id
+        where t.user_id = #{userId}
+    </select>
 </mapper>

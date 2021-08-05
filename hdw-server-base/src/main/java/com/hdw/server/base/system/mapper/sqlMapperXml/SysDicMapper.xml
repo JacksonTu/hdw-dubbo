@@ -17,12 +17,13 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-		id, parent_id AS parentId, var_code AS varCode, var_name AS
+        id
+        , parent_id AS parentId, var_code AS varCode, var_name AS
 		varName,
 		create_time AS createTime, update_time AS updateTime,
 		create_user AS
 		createUser, update_user AS updateUser
-	</sql>
+    </sql>
 
     <select id="selectTreeGrid" resultType="com.hdw.api.base.system.vo.DicVo">
         SELECT

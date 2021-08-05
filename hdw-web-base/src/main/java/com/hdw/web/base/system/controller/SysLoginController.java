@@ -170,8 +170,8 @@ public class SysLoginController {
             //TODO:清空用户登录Shiro权限缓存
             sysLogService.addLog(loginUserVo.getLoginName(), "用户名: " + loginUserVo.getName() + ",退出成功！", 1, null);
             //清空用户登录Shiro权限缓存
-            redisService.del(cacheKeyPrefix+":shiro-cache:" + token);
-            redisService.del(cacheKeyPrefix+":shiro-cache:" + "com.hdw.shiro.jwt.JwtRealm_0");
+            redisService.del(cacheKeyPrefix + ":shiro-cache:" + token);
+            redisService.del(cacheKeyPrefix + ":shiro-cache:" + "com.hdw.shiro.jwt.JwtRealm_0");
             //TODO:调用Shiro的logout
             SecurityUtils.getSubject().logout();
             return CommonResult.success("退出登录成功!");

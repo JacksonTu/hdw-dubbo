@@ -568,27 +568,29 @@ public class RedisService {
     /**
      * 将数据放入Sorted set缓存
      * Sorted set 是排序的 Set，去重但可以排序，写进去的时候给一个分数，自动根据分数排序。
-     * @param key 键
+     *
+     * @param key    键
      * @param values 值
-     * @param score 排序
+     * @param score  排序
      * @return
      */
-    public Boolean zsSet(String key, Object values,Double score){
-        return redisTemplate.opsForZSet().add(key,values,score);
+    public Boolean zsSet(String key, Object values, Double score) {
+        return redisTemplate.opsForZSet().add(key, values, score);
     }
 
     /**
      * 将数据放入Sorted set缓存
      * Sorted set 是排序的 Set，去重但可以排序，写进去的时候给一个分数，自动根据分数排序。
-     * @param key 键
-     * @param time 过期时间
+     *
+     * @param key   键
+     * @param time  过期时间
      * @param value 值
      * @param score 排序
      * @return
      */
-    public Boolean zsSetAndTime(String key, Long time,Object value,Double score){
+    public Boolean zsSetAndTime(String key, Long time, Object value, Double score) {
         try {
-            Boolean flag = redisTemplate.opsForZSet().add(key,value,score);
+            Boolean flag = redisTemplate.opsForZSet().add(key, value, score);
             if (time > 0) {
                 expire(key, time);
             }
@@ -601,64 +603,70 @@ public class RedisService {
 
     /**
      * 根据 key获取 Set中的所有值
+     *
      * @param key 键
      * @return
      */
-    public Set<Object> zsGet(String key){
-       return redisTemplate.opsForZSet().range(key,0,-1);
+    public Set<Object> zsGet(String key) {
+        return redisTemplate.opsForZSet().range(key, 0, -1);
     }
 
     /**
      * 统计排序字段之间的数据个数
-     * @param key 键
+     *
+     * @param key       键
      * @param scoreFrom 排序开始
-     * @param scoreTo 排序结束
+     * @param scoreTo   排序结束
      * @return
      */
-    public Long zsCount(String key,Double scoreFrom,Double scoreTo){
-        return redisTemplate.opsForZSet().count(key,scoreFrom,scoreTo);
+    public Long zsCount(String key, Double scoreFrom, Double scoreTo) {
+        return redisTemplate.opsForZSet().count(key, scoreFrom, scoreTo);
     }
 
     /**
      * 查询排序字段之的数据
-     * @param key 键
+     *
+     * @param key       键
      * @param scoreFrom 排序开始
-     * @param scoreTo 排序结束
+     * @param scoreTo   排序结束
      * @return
      */
-    public LinkedHashSet<Object>  zsGetByScore(String key,Double scoreFrom,Double scoreTo){
-        return (LinkedHashSet<Object>)  redisTemplate.opsForZSet().rangeByScore(key,scoreFrom,scoreTo);
+    public LinkedHashSet<Object> zsGetByScore(String key, Double scoreFrom, Double scoreTo) {
+        return (LinkedHashSet<Object>) redisTemplate.opsForZSet().rangeByScore(key, scoreFrom, scoreTo);
     }
 
     /**
      * 查询数据的score
-     * @param key 键
+     *
+     * @param key   键
      * @param value 值
      * @return
      */
-    public Long zsRank(String key,Object value){
-       return redisTemplate.opsForZSet().rank(key,value);
+    public Long zsRank(String key, Object value) {
+        return redisTemplate.opsForZSet().rank(key, value);
     }
 
     /**
      * 根据key、value移除
+     *
      * @param key
      * @param value
      * @return
      */
-    public Long zsRemove(String key,Object value){
-      return redisTemplate.opsForZSet().remove(key, value);
+    public Long zsRemove(String key, Object value) {
+        return redisTemplate.opsForZSet().remove(key, value);
     }
 
     /**
      * Sorted set 增加分数
-     * @param key 键
+     *
+     * @param key   键
      * @param value 值
      * @param score 排序
      * @return
      */
-    public Double zsIncrementScore(String key,Object value,Double score){
-        return redisTemplate.opsForZSet().incrementScore(key,value,score);
+    public Double zsIncrementScore(String key, Object value, Double score) {
+        return redisTemplate.opsForZSet().incrementScore(key, value, score);
     }
 
 

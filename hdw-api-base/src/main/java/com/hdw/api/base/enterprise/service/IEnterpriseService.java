@@ -25,6 +25,7 @@ public interface IEnterpriseService extends IBaseService<Enterprise> {
 
     /**
      * 保存企业信息
+     *
      * @param enterprise
      * @return
      */

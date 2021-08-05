@@ -51,11 +51,8 @@ public class UploadInterceptor extends HandlerInterceptorAdapter {
      */
     private boolean checkFile(String fileName, List<String> list) {
         // 获取文件后缀
-        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
         list.stream().filter(s -> equals(suffix)).collect(Collectors.toList());
-        if (!list.isEmpty() && list.size() > 0) {
-            return true;
-        }
-        return false;
+        return !list.isEmpty() && list.size() > 0;
     }
 }

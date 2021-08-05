@@ -2,7 +2,6 @@ package com.hdw.common.core.task;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -25,13 +24,13 @@ import java.util.concurrent.TimeUnit;
 public class ThreadPoolConfigure {
 
     /**
-     *  ThreadPoolExecutor
+     * ThreadPoolExecutor
      */
     @Bean
     public ThreadPoolExecutor threadPoolExecutor() {
         return new ThreadPoolExecutor(
                 Runtime.getRuntime().availableProcessors(),
-                (int) (Runtime.getRuntime().availableProcessors()/(1-0.9)),
+                (int) (Runtime.getRuntime().availableProcessors() / (1 - 0.9)),
                 60,
                 TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(Runtime.getRuntime().availableProcessors()),
@@ -70,11 +69,12 @@ public class ThreadPoolConfigure {
     /**
      * 定时任务
      * ThreadPoolTaskScheduler
+     *
      * @return
      */
     @Bean
     public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
-        ThreadPoolTaskScheduler taskScheduler=new ThreadPoolTaskScheduler();
+        ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.setPoolSize(Runtime.getRuntime().availableProcessors());
         taskScheduler.setThreadNamePrefix("taskScheduler-");
         taskScheduler.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
