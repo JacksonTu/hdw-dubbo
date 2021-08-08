@@ -55,7 +55,7 @@ hdw-dubbo
 
 1. 准备环境
     + Java1.8  (v1.8.0_131+)
-    + Nocos服务发现和注册中心(v1.4.2+)<a href="https://github.com/alibaba/nacos/releases/download/2.0.3/nacos-server-2.0.3.zip">下载地址</a>
+    + Nacos服务发现和注册中心(v1.4.2+)<a href="https://github.com/alibaba/nacos/releases/download/2.0.3/nacos-server-2.0.3.zip">下载地址</a>
     + Redis (v3.2.100+)
     + ActiveMQ(v5.15.8+)<a href="http://activemq.apache.org/components/classic/download/" target="_blank">下载地址</a>
     + RabbitMq (v3.7+)（需安装rabbitmq_delayed_message_exchange插件 <a href="https://www.rabbitmq.com/community-plugins.html" target="_blank">下载地址</a>）
@@ -67,18 +67,15 @@ hdw-dubbo
    
     + docs/sql/hdw_dubbo.sql
     
-3. 启动Nocos服务发现和注册中心
+3. 启动Nacos服务发现和注册中心
     +
-
-4. 启动ActiveMQ
-   +
-
-5. 初始化maven项目  
+    
+4. 初始化maven项目  
     ``` bush
         maven clean install
     ```
 
-6. 本地启动(按顺序启动)
+5. 本地启动(按顺序启动)
      1. [必需]ServerBaseApplication(基础服务提供者服务器)
      2. [必需]ServerNoticeApplication(系统消息服务提供者服务器)
      3. [必需]WebBaseApplication(基础服务消费者服务器)
@@ -88,7 +85,7 @@ hdw-dubbo
        + 访问基础平台API http://localhost:8190/doc.html
      ```
      
-7. 前端启动
+6. 前端启动
     1. 安装淘宝NPM镜像
     ```bush
     npm install -g cnpm --registry=https://registry.npm.taobao.org
@@ -101,19 +98,19 @@ hdw-dubbo
     ```
     访问 http://localhost:8090
     
-8. 项目打包部署  
+7. 项目打包部署  
      maven多环境打包,并替换相关变量
    ```bush
       clean install -D profileActive={dev|test|prod} -f pom.xml
    ```
 
-9. JVM优化
+8. JVM优化
      ```bush  
         -Xmx256m -Xms256m -Xss1m -Xmn128m -XX:+PrintGCDetails  
      ```
      
-10. 如果想使用ActiveMQ,需要引入hdw-common-starter-activemq组件 
-    在pom.xml加入
+9. 如果想使用ActiveMQ,需要引入hdw-common-starter-activemq组件 
+   在pom.xml加入
 
    ```
        <dependency>
