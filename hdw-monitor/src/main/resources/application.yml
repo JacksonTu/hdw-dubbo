@@ -1,3 +1,5 @@
 spring:
   profiles:
     active: ${profileActive}
+  application:
+    name: ${project.artifactId}

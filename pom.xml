@@ -24,7 +24,6 @@
         <module>hdw-server-notice</module>
         <module>hdw-web-base</module>
         <module>hdw-monitor</module>
-
     </modules>
 
     <properties>
@@ -34,10 +33,9 @@
         <spring-boot.version>2.5.3</spring-boot.version>
         <spring-cloud.version>2020.0.3</spring-cloud.version>
         <spring-boot-admin.version>2.4.3</spring-boot-admin.version>
-        <alibaba.cloud.version>2021.1</alibaba.cloud.version>
+        <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
         <alibaba.fastjson.version>1.2.5</alibaba.fastjson.version>
         <alibaba.druid.version>1.2.6</alibaba.druid.version>
-        <dubbo.version>2.7.8</dubbo.version>
 
         <apache.commons-fileupload.version>1.4</apache.commons-fileupload.version>
         <apache.commons-text.version>1.9</apache.commons-text.version>
@@ -76,9 +74,23 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.apache.dubbo</groupId>
-                <artifactId>dubbo-dependencies-bom</artifactId>
-                <version>${dubbo.version}</version>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-dependencies</artifactId>
+                <version>${spring-boot-admin.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

@@ -37,44 +37,38 @@ spring:
             port: 465
             class: javax.net.ssl.SSLSocketFactory
             fallback: false
-
-  boot:
-    admin:
-      client:
-        url: http://127.0.0.1:8180
-        instance:
-          prefer-ip: true
-          service-base-url: http://127.0.0.1:${server.port}
-
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
 
 dubbo:
   application:
-    id: hdw-consumer-base
+    id: ${spring.application.name}
     name: ${dubbo.application.id}
-    qos:
-      enable: false
   protocol:
     id: dubbo
     name: dubbo
-    port: 20883
+    port: -1
     threadpool: fixed
     threads: 200
     payload: 52428800
   registry:
     id: hdw-registry
-    address: zookeeper://127.0.0.1:2181
+    address: spring-cloud://localhost
     file: /output/cache/${dubbo.application.id}.cache
     timeout: 5000
     session: 60000
     check: true
   consumer:
-    id: ${dubbo.application.id}
     group: hdw-base
     version: 1.0.0
     timeout: 60000
     loadbalance: roundrobin
     retries: 2
     actives: 200
+  cloud:
+    subscribed-services: hdw-server-base,hdw-server-notice
 
 fdfs:
   file-upload:

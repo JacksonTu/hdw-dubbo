@@ -55,7 +55,7 @@ hdw-dubbo
 
 1. 准备环境
     + Java1.8  (v1.8.0_131+)
-    + Zookeeper服务发现和注册中心(v3.4.14+)<a href="https://mirrors.tuna.tsinghua.edu.cn/apache/zookeeper/zookeeper-3.4.14/zookeeper-3.4.14.tar.gz">下载地址</a>
+    + Nocos服务发现和注册中心(v1.4.2+)<a href="https://github.com/alibaba/nacos/releases/download/2.0.3/nacos-server-2.0.3.zip">下载地址</a>
     + Redis (v3.2.100+)
     + ActiveMQ(v5.15.8+)<a href="http://activemq.apache.org/components/classic/download/" target="_blank">下载地址</a>
     + RabbitMq (v3.7+)（需安装rabbitmq_delayed_message_exchange插件 <a href="https://www.rabbitmq.com/community-plugins.html" target="_blank">下载地址</a>）
@@ -67,7 +67,7 @@ hdw-dubbo
    
     + docs/sql/hdw_dubbo.sql
     
-3. 启动Zookeeper服务发现和注册中心
+3. 启动Nocos服务发现和注册中心
     +
 
 4. 启动ActiveMQ

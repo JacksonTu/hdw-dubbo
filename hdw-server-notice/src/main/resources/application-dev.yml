@@ -49,39 +49,32 @@ spring:
         min-idle: 50
         max-wait: 6000ms
       shutdown-timeout: 100ms
-  boot:
-    admin:
-      client:
-        url: http://127.0.0.1:8180
-        instance:
-          prefer-ip: true
-          service-base-url: http://127.0.0.1:${server.port}
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
 
 dubbo:
   scan:
     base-packages: com.hdw.server.notice.service.impl
   application:
-    id: hdw-provider-notice
+    id: ${spring.application.name}
     name: ${dubbo.application.id}
-    qos:
-      enable: false
   protocol:
     id: dubbo
     name: dubbo
     threadpool: fixed
     threads: 200
     payload: 52428800
-    port: 20881
+    port: -1
   registry:
     id: hdw-registry
-    address: zookeeper://127.0.0.1:2181
+    address: spring-cloud://localhost
     file: /output/cache/${dubbo.application.id}.cache
     timeout: 5000
     session: 60000
     check: true
   provider:
-    id: ${dubbo.application.id}
-    protocol: ${dubbo.protocol.name}
     group: hdw-base
     version: 1.0.0
     timeout: 60000
@@ -90,9 +83,7 @@ dubbo:
     retries: 2
     actives: 200
     executes: 200
-    port: 20881
   consumer:
-    id: ${dubbo.application.id}
     group: hdw-base
     version: 1.0.0
     timeout: 60000
@@ -100,4 +91,6 @@ dubbo:
     retries: 2
     actives: 200
     check: false
+  cloud:
+    subscribed-services: hdw-server-base
 
