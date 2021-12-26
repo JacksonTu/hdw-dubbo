@@ -4,6 +4,7 @@ import com.hdw.common.core.utils.JacksonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
@@ -28,6 +29,17 @@ public class WebConfigure implements WebMvcConfigurer {
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
 
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("GET","POST","DELETE")
+                .allowedHeaders("*")
+                .exposedHeaders("Access-Control-Allow-Origin")
+                .maxAge(60 * 60 * 24 * 7)
+                .allowCredentials(true);
     }
 
     @Override

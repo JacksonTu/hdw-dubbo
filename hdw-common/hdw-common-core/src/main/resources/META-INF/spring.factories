@@ -1,7 +1,6 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.hdw.common.core.swagger2.Swagger2Config,\
   com.hdw.common.core.swagger2.Swagger2Properties,\
-  com.hdw.common.core.web.CorsConfigure,\
   com.hdw.common.core.web.WebConfigure,\
   com.hdw.common.core.xss.XssFilter,\
   com.hdw.common.core.utils.SpringUtil,\
