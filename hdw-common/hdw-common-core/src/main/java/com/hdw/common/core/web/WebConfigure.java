@@ -1,36 +1,11 @@
 package com.hdw.common.core.web;
 
-import cn.hutool.core.date.DatePattern;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import com.hdw.common.core.jackson.deserializer.JacksonDateDeserializer;
-import com.hdw.common.core.jackson.deserializer.JacksonDoubleDeserializer;
-import com.hdw.common.core.jackson.serializer.JacksonDateSerializer;
-import com.hdw.common.core.jackson.serializer.JacksonIntegerDeserializer;
-import com.hdw.common.core.xss.XssJacksonDeserializer;
-import com.hdw.common.core.xss.XssJacksonSerializer;
+import com.hdw.common.core.utils.JacksonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,47 +32,16 @@ public class WebConfigure implements WebMvcConfigurer {
 
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        for (int i = 0; i < converters.size(); i++) {
+            HttpMessageConverter<?> messageConverter = converters.get(i);
+            if (messageConverter instanceof MappingJackson2HttpMessageConverter) {
+                converters.remove(i);
+            }
+        }
         MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-
-        ObjectMapper objectMapper = jackson2HttpMessageConverter.getObjectMapper();
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
-
-        SimpleModule simpleModule = new SimpleModule();
-        // Long类型序列化成字符串，避免Long精度丢失
-        simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
-        simpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
-
-        // XSS序列化
-        simpleModule.addSerializer(String.class, new XssJacksonSerializer());
-        simpleModule.addDeserializer(String.class, new XssJacksonDeserializer());
-
-        // Date序列化
-        simpleModule.addSerializer(Date.class, new JacksonDateSerializer());
-        simpleModule.addDeserializer(Date.class, new JacksonDateDeserializer());
-
-        // Integer、Double反序列化
-        simpleModule.addDeserializer(Integer.class, new JacksonIntegerDeserializer());
-        simpleModule.addDeserializer(Double.class, new JacksonDoubleDeserializer());
-
-        // jdk8日期序列化和反序列化设置
-        JavaTimeModule javaTimeModule = new JavaTimeModule();
-        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.NORM_DATETIME_PATTERN)));
-        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DatePattern.NORM_DATETIME_PATTERN)));
-
-        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DatePattern.NORM_DATE_PATTERN)));
-        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DatePattern.NORM_DATE_PATTERN)));
-
-        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.NORM_TIME_PATTERN)));
-        javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DatePattern.NORM_TIME_PATTERN)));
-
-        objectMapper.registerModule(simpleModule)
-                .registerModule(javaTimeModule).registerModule(new ParameterNamesModule());
-
-        jackson2HttpMessageConverter.setObjectMapper(objectMapper);
+        jackson2HttpMessageConverter.setObjectMapper(JacksonUtil.getObjectMapper());
 
         //放到第一个
-        converters.add(0, jackson2HttpMessageConverter);
-
+        converters.add(jackson2HttpMessageConverter);
     }
 }
